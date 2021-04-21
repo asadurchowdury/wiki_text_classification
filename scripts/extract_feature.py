@@ -14,6 +14,6 @@ def word_count(df):
     return df
 
 import nltk
-
+from sklearn.linear_model import LogisticRegression as LR
 # feature 2 : word count without stopwords and punctuations
 
