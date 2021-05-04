@@ -14,6 +14,7 @@ def word_count(df):
     return df
 
 import nltk
+import spacy
 
 # feature 2 : word count without stopwords and punctuations
 
