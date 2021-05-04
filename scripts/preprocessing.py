@@ -1,6 +1,7 @@
 # call option python preprocessing.py "filename"
 # return a pandas dataframe 
 # print option will save the dataframe to file
+# add preprocesing step as necessary
 import pandas as pd
 import numpy as np
 
