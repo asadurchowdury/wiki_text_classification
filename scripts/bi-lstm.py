@@ -31,11 +31,8 @@ class MyRNN(nn.Module):
         embedded = self.dropout(self.embed(text))
         packedembedded = nn.utils.rnn.pack_padded_sequence(embedded,textlengths)
 
-        hidden = torch.cat(())
+        hidden = None#torch.cat(())
         return self.dense(self.dropout(hidden))
-
-
-
 
 
 
