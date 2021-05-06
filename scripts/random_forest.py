@@ -36,7 +36,7 @@ from sklearn.metrics import f1_score, accuracy_score, auc
 
 score = f1_score(y_test,y_pred)
 
-print("F1 score for SVM is ", score)
+print("F1 score for random forest model is ", score)
 
 
 
