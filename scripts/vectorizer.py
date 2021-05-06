@@ -17,7 +17,7 @@ X_train = scaling.transform(X_train)
 
 
 print('Training SVM model ...')
-clf = svm.SVC(kernel='linear')
+clf = svm.SVC(kernel='linear',cache_size=7000)
 clf.fit(X_train,y_train)
 
 testdata = pd.read_csv('assets/WikiLarge_Train.csv')
