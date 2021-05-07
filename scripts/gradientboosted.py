@@ -18,7 +18,7 @@ scaling = RobustScaler(with_centering=False).fit(X_train)
 X_train = scaling.transform(X_train)
 
 
-print('Training Random forest model ...')
+print('Training gradient boosted model ...')
 clf = RandomForestClassifier(n_estimators=10,n_jobs=-1)
 clf.fit(X_train,y_train)
 
@@ -36,4 +36,4 @@ from sklearn.metrics import f1_score, accuracy_score, auc
 
 score = f1_score(y_test,y_pred)
 
-print("F1 score for random forest model is ", score)
+print("F1 score for gradient boosted model is ", score)
