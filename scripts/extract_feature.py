@@ -1,16 +1,31 @@
-# this script will extract different features for each observations
+# this script will extract different features for each observation
 # potentially use mrjob/spark in future
 
-# feature 1 : simple word count
 import pandas as pd
+import re
 import numpy as np
-testdf = pd.read_csv('assets/test.csv')
-def text_counter(sentence):
-    count = len(sentence.split())
-    return count
+import syllapy
 
-def word_count(df):
-    df['word_count']=df['original_text'].apply(text_counter)
+testdf = pd.read_csv('assets/test.csv')
+aoa = pd.read_csv(r'C:\Users\socce\Downloads\AoA_51715_words.csv', encoding= 'unicode_escape')
+
+#Freq_pm: Freq of the Word in general English (larger -> more common)
+dict_lookup = dict(zip(aoa["Word"], aoa["Freq_pm"]))
+
+#AoA_Kup_lem: Estimated AoA based on Kuperman et al. study lemmatized words.
+other_dict_lookup  = dict(zip(aoa["Word"], aoa["AoA_Kup_lem"]))
+
+def syllable_counter(tokenized_list):
+    return sum([syllapy.count(token) for token in tokenized_list])
+
+def preprocessing(df):
+    df['words'] = df['original_text'].apply(lambda x: re.findall(r"\w+", x))
+    df['sentence_len'] = df.words.apply(lambda x: len(x))
+    df['freq_score'] = df.words.apply(lambda x: np.mean([dict_lookup.get(i) if i in dict_lookup else 0 for i in x]))
+    df['aoa_score'] = df.words.apply(lambda x: np.mean([other_dict_lookup.get(i) for i in x if i in other_dict_lookup]))
+    df['syllable_count'] = df['words'].progress_apply(lambda x: syllable_counter(x))
+    df['Flesch_Kincaid'] = (206.835 - (1.015 * df.sentence_len) - (84.6 * (df.syllable_count / df.sentence_len)))
+    df['Flesch_Kincaid_binary'] = np.where(df['Flesch_Kincaid'] > df['Flesch_Kincaid'].mean(), 0, 1)
     return df
 
 import nltk
