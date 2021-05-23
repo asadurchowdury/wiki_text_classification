@@ -1,12 +1,19 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import f1_score
-
+from zipfile import ZipFile
+import io
+from urllib.request import urlopen
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
-# data = pd.read_csv('assets/test.csv')
-data = pd.read_csv('assets/train_with_features.csv')
+
+
+print(ZipFile('assets/train_with_features.csv.zip'))
+
+# file = ZipFile(io.BytesIO('assets/train_with_features.csv.zip'))
+data = pd.read_csv('assets/train_with_features.csv.zip',compression='zip')
+print(data.head())
 data_f = data[['label', 'sentence_len', 'freq_score', 'aoa_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
 data_f = data_f.dropna()
 X_train = data_f[['sentence_len', 'freq_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
