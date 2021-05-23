@@ -9,14 +9,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 
 
-print(ZipFile('assets/train_with_features.csv.zip'))
+# print(ZipFile('assets/train_with_features.csv.gz'))
 
 # file = ZipFile(io.BytesIO('assets/train_with_features.csv.zip'))
-data = pd.read_csv('assets/train_with_features.csv.zip',compression='zip')
-print(data.head())
-data_f = data[['label', 'sentence_len', 'freq_score', 'aoa_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
+data = pd.read_csv('assets/train_with_features.csv.gz',compression='gzip')
+print(data.columns)
+
+data_f = data[['label', 'sentence_len','freq_score', 'aoa_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
 data_f = data_f.dropna()
-X_train = data_f[['sentence_len', 'freq_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
+X_train = data_f[['sentence_len', 'freq_score', 'aoa_score','syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
 X_train = X_train.astype('float')
 y_train = data_f['label']
 
@@ -25,11 +26,11 @@ clf.fit(X_train,y_train)
 
 
 
-testdata = pd.read_csv('assets/test_with_features.csv')
+testdata = pd.read_csv('assets/test_aoa_updated.csv.gz',compression='gzip')
 
 # testdata = testdata.dropna()
 print(len(testdata))
-testdata_f = testdata[['sentence_len', 'freq_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
+testdata_f = testdata[['sentence_len', 'freq_score','aoa_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary']]
 print(len(testdata_f))
 testdata_f = testdata_f.fillna(0)
 testdata_f = testdata_f.astype('float')
@@ -39,4 +40,4 @@ predict = clf.predict(testdata_f)
 
 prediction = pd.DataFrame(predict, columns=['label'])
 prediction.rename({"Unnamed: 0":'id'},axis=1,inplace=True)
-prediction.to_csv('prediction_with_features.csv')
+prediction.to_csv('prediction/prediction_with_features.csv')
