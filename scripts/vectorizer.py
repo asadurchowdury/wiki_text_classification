@@ -2,6 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import svm
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 data = pd.read_csv('assets/test.csv')
 
 # other features can be added to this vectorizer, checkout sklearn for np.hstack
@@ -28,6 +29,7 @@ X_test = scaling.transform(X_test)
 y_test = testdata.label
 
 y_pred = clf.predict(X_test)
+
 
 from sklearn.metrics import f1_score, accuracy_score, auc
 
