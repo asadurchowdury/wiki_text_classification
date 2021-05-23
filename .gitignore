@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+# assets/test_with_features.csv
+# assets/train_with_features.csv
+.DS_Store/
