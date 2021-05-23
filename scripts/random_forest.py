@@ -6,13 +6,17 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 # from functools import cache, lru_cache
 from sklearn.pipeline import Pipeline, FeatureUnion
+from scipy.sparse import hstack
 # @ cache
 
 # data = pd.read_csv('assets/test.csv')
 data = pd.read_csv('assets/train_with_features.csv.gz',compression='gzip')
 
 # other features can be added to this vectorizer, checkout sklearn for np.hstack
+
 # vectorizer = TfidfVectorizer(ngram_range=(1,2),stop_words='english')
+# testing countvectorizer instead of tfidf
+
 vectorizer = CountVectorizer(ngram_range=(1,2))
 print('Vectorizing the training data ...')
 X_train = vectorizer.fit_transform(data.original_text)
@@ -29,7 +33,7 @@ print(X_train.shape)
 
 
 print('Training Random forest model ...')
-clf = RandomForestClassifier(n_estimators=10,n_jobs=-1)
+clf = RandomForestClassifier(n_estimators=10,n_jobs=-1,verbose=1)
 clf.fit(X_train,y_train)
 
 testdata = pd.read_csv('assets/test_aoa_updated.csv.gz',compression='gzip')
