@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+version https://git-lfs.github.com/spec/v1
+oid sha256:685c65e602b2fa6b538cff12950ca580abb5b604be82eae35889081b990fbfe5
+size 3524642
+=======
 Word,Alternative.spelling,Freq_pm,Dom_PoS_SUBTLEX,Nletters,Nphon,Nsyll,Lemma_highest_PoS,AoA_Kup,Perc_known,AoA_Kup_lem,Perc_known_lem,AoA_Bird_lem,AoA_Bristol_lem,AoA_Cort_lem,AoA_Schock
 a,a,20415.27,Article,1,1,1,a,2.89,1.00,2.89,1.00,3.16,,,
 aardvark,aardvark,0.41,Noun,8,7,2,aardvark,9.89,1.00,9.89,1.00,,,,
@@ -51714,3 +51719,4 @@ zucchinis,zucchinis,0.04,Noun,9,7,3,zucchini,,,6.79,1.00,,,,
 zwieback,zwieback,0.04,Noun,8,6,2,zwieback,16.10,0.53,16.10,0.53,,,,
 zygote,zygote,0.14,Noun,6,5,2,zygote,15.38,0.91,15.38,0.91,,,,
 zygotes,zygotes,0.02,Noun,7,6,2,zygote,,,15.38,0.91,,,,
+>>>>>>> d5868e35d85adb1119c6b687750c6acca526f392
