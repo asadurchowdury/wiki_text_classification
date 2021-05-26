@@ -6,7 +6,7 @@ import re
 import numpy as np
 import syllapy
 
-testdf = pd.read_csv('assets/test.csv')
+traindf = pd.read_csv('assets/train.csv')
 aoa = pd.read_csv(r'C:\Users\socce\Downloads\AoA_51715_words.csv', encoding= 'unicode_escape')
 
 #Freq_pm: Freq of the Word in general English (larger -> more common)
