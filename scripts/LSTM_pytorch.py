@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
+from extract_feature import preprocessing
+
+traindf = pd.read_csv('assets/train.csv')
 
 cv = CountVectorizer(analyzer=lambda x: x)
 
 #take df from extract_feature.py
-df = df.dropna()
+df = preprocessing(df.dropna())
 df['vec'] = df.words.apply(lambda x: " ".join(x))
 
 arr = cv.fit_transform(df['vec']).toarray()
@@ -18,17 +21,17 @@ from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 
 
-#train['l'] = scaler.fit_transform(train[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid']])#.tolist()
+
 X_arr = scaler.fit_transform(df[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid']])
 df['l'] = [x for x in X_arr]
-#df['l'] = df['l'].apply(lambda x: [int(y) for y in x])
+
 train_sample = df.sample(8000)[['l','vec2','label']]
-split_frac = 0.8
-train_x = train_sample.l[0:int(split_frac*len(train_sample))]
+split_frac = 0.9
+train_x = train_sample.vec2[0:int(split_frac*len(train_sample))]
 t_x = train_sample.vec2[0:int(split_frac*len(train_sample))]
 train_y = train_sample.label[0:int(split_frac*len(train_sample))]
 
-valid_x = train_sample.l[int(split_frac*len(train_sample)):]
+valid_x = train_sample.vec2[int(split_frac*len(train_sample)):]
 valid_y = train_sample.label[int(split_frac*len(train_sample)):len(train_sample)]
 
 print(train_x.shape)
@@ -114,7 +117,7 @@ vocab_size = 1000 # +1 for the 0 padding
 output_size = 1
 embedding_dim = 400
 hidden_dim = 256
-n_layers = 2
+n_layers = 12
 net = SentimentLSTM(vocab_size, output_size, embedding_dim, hidden_dim, n_layers)
 print(net)
 
