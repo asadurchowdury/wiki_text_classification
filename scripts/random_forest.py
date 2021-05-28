@@ -14,10 +14,10 @@ data = pd.read_csv('assets/train_with_features.csv.gz',compression='gzip')
 
 # other features can be added to this vectorizer, checkout sklearn for np.hstack
 
-# vectorizer = TfidfVectorizer(ngram_range=(1,2),stop_words='english')
+# vectorizer = TfidfVectorizer(ngram_range=(1,2))
 # testing countvectorizer instead of tfidf
 
-vectorizer = CountVectorizer(ngram_range=(1,2))
+vectorizer = CountVectorizer(ngram_range=(1,2),max_df=1000)
 print('Vectorizing the training data ...')
 X_train = vectorizer.fit_transform(data.original_text)
 y_train = data.label
