@@ -21,7 +21,8 @@ eng_stopwords = stopwords.words('english')
 
 
 # please update the link for aoa word list
-aoa = pd.read_csv(r'C:\Users\Lannister\Desktop\wiki_text_classification\assets\AoA_51715_words.csv', encoding= 'unicode_escape')
+aoa = pd.read_csv(r'assets/AoA_51715_words.csv', encoding= 'unicode_escape')
+concrete = pd.read_csv(r'assets/Concreteness_ratings_Brysbaert_et_al_BRM.txt',sep='\t')
 
 #Freq_pm: Freq of the Word in general English (larger -> more common)
 dict_lookup = dict(zip(aoa["Word"], aoa["Freq_pm"]))
@@ -30,6 +31,10 @@ dict_lookup = dict(zip(aoa["Word"], aoa["Freq_pm"]))
 other_dict_lookup  = dict(zip(aoa["Word"], aoa["AoA_Kup_lem"]))
 
 phoneme_dict = dict(zip(aoa["Word"], aoa["Nphon"]))
+
+concrete_dict = dict(zip(concrete["Word"], concrete["Conc.M"]))
+
+
 
 # Dale chall ratio
 f = open('assets/dale_chall.txt','r')
@@ -61,13 +66,23 @@ def lemma_list(lst):
     final = [lemmatizer.lemmatize(word) for word in lst]
     return final
 
-def ratio(l):
+
+def sim_ratio(l):
     sim = [x for x in l if x < 11]
     dif = [x for x in l if x > 11]
     if (len(sim) + len(dif)) == 0:
         return np.nan
     else:
-        return len(sim)/(len(sim) + len(dif))
+        return len(sim) / (len(sim) + len(dif))
+
+
+def dif_ratio(l):
+    sim = [x for x in l if x < 11]
+    dif = [x for x in l if x > 11]
+    if (len(sim) + len(dif)) == 0:
+        return np.nan
+    else:
+        return len(dif) / (len(sim) + len(dif))
 
 def preprocessing(df,clean=True):
     df['words'] = df['original_text'].apply(lambda x: re.findall(r"\w+", x))
@@ -88,8 +103,10 @@ def preprocessing(df,clean=True):
     df['avg_word_len'] = df['original_text'].apply(lambda x: avg_word(x))
     df['stopwords'] = df['words'].apply(lambda x: len([x for x in x if x in eng_stopwords]))
     df['non_stopwords'] = df['sentence_len']-df['stopwords']
-    df['aoa_ratio'] = df.ya_score.apply(lambda x: ratio(x))
+    df['sim_aoa_ratio'] = df.ya_score.progress_apply(lambda x: sim_ratio(x))  # higher is better
+    df['dif_aoa_ratio'] = df.ya_score.progress_apply(lambda x: dif_ratio(x))  # lower is better
     df['phonemes'] = df.words.apply(lambda x: np.mean([phoneme_dict.get(i) for i in x if i in phoneme_dict]))
+    df['conc_score'] = df.words.apply(lambda x: np.mean([concrete_dict.get(i) for i in x if i in concrete_dict]))
     df.drop(['original_text','lem_words','words', 'ya_score'],axis=1,inplace = True)
     return df
 
