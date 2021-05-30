@@ -6,7 +6,6 @@ import pandas as pd
 import re
 import numpy as np
 import syllapy
-import nltk
 import spacy
 import nltk
 from nltk.corpus import stopwords
@@ -88,7 +87,7 @@ def preprocessing(df,clean=True):
     df['words'] = df['original_text'].apply(lambda x: re.findall(r"\w+", x))
     if clean:
         df['words'] = df.words.apply(lambda x: [word for word in x if len(word)>1])
-        df['words'] = df.words.apply(lambda x: [word for word in x if word in ['LRB','RRB']])
+        df['words'] = df.words.apply(lambda x: [word for word in x if word not in ['LRB','RRB']])
 
     df['sentence_len'] = df.words.apply(lambda x: len(x))
     df['lem_words'] = df.words.apply(lambda x: lemma_list(x))
@@ -103,8 +102,8 @@ def preprocessing(df,clean=True):
     df['avg_word_len'] = df['original_text'].apply(lambda x: avg_word(x))
     df['stopwords'] = df['words'].apply(lambda x: len([x for x in x if x in eng_stopwords]))
     df['non_stopwords'] = df['sentence_len']-df['stopwords']
-    df['sim_aoa_ratio'] = df.ya_score.progress_apply(lambda x: sim_ratio(x))  # higher is better
-    df['dif_aoa_ratio'] = df.ya_score.progress_apply(lambda x: dif_ratio(x))  # lower is better
+    df['sim_aoa_ratio'] = df.ya_score.apply(lambda x: sim_ratio(x))  # higher is better
+    df['dif_aoa_ratio'] = df.ya_score.apply(lambda x: dif_ratio(x))  # lower is better
     df['phonemes'] = df.words.apply(lambda x: np.mean([phoneme_dict.get(i) for i in x if i in phoneme_dict]))
     df['conc_score'] = df.words.apply(lambda x: np.mean([concrete_dict.get(i) for i in x if i in concrete_dict]))
     df.drop(['original_text','lem_words','words', 'ya_score'],axis=1,inplace = True)
