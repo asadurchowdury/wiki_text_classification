@@ -13,5 +13,11 @@ from sklearn.ensemble import GradientBoostingClassifier
 # print(ZipFile('assets/train_with_features.csv.gz'))
 
 # file = ZipFile(io.BytesIO('assets/train_with_features.csv.zip'))
-data = pd.read_csv('assets/train_with_features.csv.gz',compression='gzip')
-print(data['syllable_count'].head(50))
+# data = pd.read_csv('test.csv.gz',compression='gzip')
+# print(data.columns)
+# print(data.head())
+from nltk.corpus import stopwords
+
+eng_stopwords = stopwords.words('english')
+print(eng_stopwords)
+
