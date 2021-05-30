@@ -1,7 +1,7 @@
 # this script will extract different features for each observation
 # potentially use mrjob/spark in future
 
-from numpy.lib.function_base import extract
+# from numpy.lib.function_base import extract
 import pandas as pd
 import re
 import numpy as np
@@ -69,7 +69,7 @@ def preprocessing(df,clean=True):
     df['sentence_len'] = df.words.apply(lambda x: len(x))
     df['lem_words'] = df.words.apply(lambda x: lemma_list(x))
     df['freq_score'] = df.lem_words.apply(lambda x: np.mean([dict_lookup.get(i) if i in dict_lookup else 0 for i in x]))
-    df['aoa_score'] = df.lem_words.apply(lambda x: np.mean([other_dict_lookup.get(i) for i in x if i in other_dict_lookup]))
+    df['aoa_score'] = df.words.apply(lambda x: np.mean([other_dict_lookup.get(i) for i in x if i in other_dict_lookup]))
     df['syllable_count'] = df['words'].apply(lambda x: syllable_counter(x))
     df['Flesch_Kincaid'] = (206.835 - (1.015 * df.sentence_len) - (84.6 * (df.syllable_count / df.sentence_len)))
     df['Flesch_Kincaid_binary'] = np.where(df['Flesch_Kincaid'] > df['Flesch_Kincaid'].mean(), 0, 1)
@@ -78,6 +78,7 @@ def preprocessing(df,clean=True):
     df['avg_word_len'] = df['original_text'].apply(lambda x: avg_word(x))
     df['stopwords'] = df['words'].apply(lambda x: len([x for x in x if x in eng_stopwords]))
     df['non_stopwords'] = df['sentence_len']-df['stopwords']
+
     df.drop(['original_text','lem_words','words'],axis=1,inplace = True)
     return df
 
