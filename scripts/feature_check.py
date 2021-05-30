@@ -13,11 +13,11 @@ from sklearn.ensemble import GradientBoostingClassifier
 # print(ZipFile('assets/train_with_features.csv.gz'))
 
 # file = ZipFile(io.BytesIO('assets/train_with_features.csv.zip'))
-data = pd.read_csv('./assets/test.csv.gz',compression='gzip')
+data = pd.read_csv('./assets/train.csv.gz',compression='gzip')
 print(data.columns)
-print(data.head())
-from nltk.corpus import stopwords
+print(data.head(100))
+# from nltk.corpus import stopwords
 
-eng_stopwords = stopwords.words('english')
-print(eng_stopwords)
+# eng_stopwords = stopwords.words('english')
+# print(eng_stopwords)
 

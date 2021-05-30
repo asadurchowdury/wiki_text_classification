@@ -131,4 +131,4 @@ dmypy.json
 assets/train_with_features.csv
 .DS_Store/
 */.DS_Store/
-assets/test.csv.gz
+# assets/test.csv.gz
