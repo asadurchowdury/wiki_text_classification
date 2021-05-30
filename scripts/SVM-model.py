@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler
 
 # file = ZipFile(io.BytesIO('assets/train_with_features.csv.zip'))
 data = pd.read_csv('assets/train_with_features.csv.gz',compression='gzip')
-print(data.columns)
+# print(data.columns)
 
 data_f = data[['label', 'sentence_len','freq_score', 'aoa_score', 'syllable_count', 'Flesch_Kincaid', 'Flesch_Kincaid_binary','dale_ratio']]
 data_f = data_f.dropna()
