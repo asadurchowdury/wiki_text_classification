@@ -7,7 +7,7 @@ traindf = pd.read_csv('assets/train.csv')
 
 cv = CountVectorizer(analyzer=lambda x: x)
 
-#take df from extract_feature.py
+#df with feature representations from preprocessing function of extract_feature.py
 df = preprocessing(df.dropna())
 df['vec'] = df.words.apply(lambda x: " ".join(x))
 
@@ -25,8 +25,8 @@ scaler = StandardScaler()
 X_arr = scaler.fit_transform(df[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid']])
 df['l'] = [x for x in X_arr]
 
-train_sample = df.sample(8000)[['l','vec2','label']]
-split_frac = 0.9
+train_sample = df.sample(20000)[['l','vec2','label']]
+split_frac = 0.8
 train_x = train_sample.vec2[0:int(split_frac*len(train_sample))]
 t_x = train_sample.vec2[0:int(split_frac*len(train_sample))]
 train_y = train_sample.label[0:int(split_frac*len(train_sample))]
@@ -66,10 +66,10 @@ class SentimentLSTM(nn.Module):
         # embedding and LSTM layers
         self.embedding = nn.Embedding(vocab_size, embedding_dim)
         self.lstm = nn.LSTM(embedding_dim, hidden_dim, n_layers,
-                            dropout=drop_prob, batch_first=True)
+                            batch_first=True) #dropout=drop_prob
 
         # dropout layer
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(0.4)
 
         # linear and sigmoid layers
         self.fc = nn.Linear(hidden_dim, output_size)
@@ -114,21 +114,21 @@ class SentimentLSTM(nn.Module):
 
 # Instantiate the model w/ hyperparams
 vocab_size = 1000 # +1 for the 0 padding
-output_size = 1
+output_size = 2
 embedding_dim = 400
 hidden_dim = 256
-n_layers = 12
+n_layers = 2
 net = SentimentLSTM(vocab_size, output_size, embedding_dim, hidden_dim, n_layers)
 print(net)
 
-lr = 0.001
+lr = 0.01
 
 criterion = nn.BCELoss()
-optimizer = torch.optim.Adam(net.parameters(), lr=lr)
+optimizer = torch.optim.RMSprop(net.parameters(), lr=lr)
 
 # training params
 
-epochs = 4  # 3-4 is approx where I noticed the validation loss stop decreasing
+epochs = 5  # 3-4 is approx where I noticed the validation loss stop decreasing
 
 counter = 0
 print_every = 100
