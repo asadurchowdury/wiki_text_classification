@@ -8,6 +8,9 @@ import syllapy
 
 traindf = pd.read_csv('assets/train.csv')
 aoa = pd.read_csv(r'C:\Users\socce\Downloads\AoA_51715_words.csv', encoding= 'unicode_escape')
+f = open(r'C:\Users\socce\Downloads\dale_chall.txt','r')
+dale = f.readlines()
+dale = [x.replace('\n','') for x in dale]
 
 #Freq_pm: Freq of the Word in general English (larger -> more common)
 dict_lookup = dict(zip(aoa["Word"], aoa["Freq_pm"]))
@@ -18,6 +21,17 @@ other_dict_lookup  = dict(zip(aoa["Word"], aoa["AoA_Kup_lem"]))
 def syllable_counter(tokenized_list):
     return sum([syllapy.count(token) for token in tokenized_list])
 
+def intersection(lst1, lst2):
+    return list(set(lst1) & set(lst2))
+
+def ratio_calculator(str,lst):
+    strlst = str.split()
+    itersect = intersection(strlst,lst)
+    if len(itersect)==0:
+        return 0
+    else:
+        return (len(itersect)/len(strlst))
+
 def preprocessing(df):
     df['words'] = df['original_text'].apply(lambda x: re.findall(r"\w+", x))
     df['sentence_len'] = df.words.apply(lambda x: len(x))
@@ -26,14 +40,8 @@ def preprocessing(df):
     df['syllable_count'] = df['words'].progress_apply(lambda x: syllable_counter(x))
     df['Flesch_Kincaid'] = (206.835 - (1.015 * df.sentence_len) - (84.6 * (df.syllable_count / df.sentence_len)))
     df['Flesch_Kincaid_binary'] = np.where(df['Flesch_Kincaid'] > df['Flesch_Kincaid'].mean(), 0, 1)
+    df['dale_ratio'] = df['original_text'].apply(lambda x: ratio_calculator(x, dale))
     return df
 
-import nltk
-<<<<<<< HEAD
-import spacy
 
-=======
-from sklearn.linear_model import LogisticRegression as LR
->>>>>>> a91194304c250b91fd810e750588810ccc801fd9
-# feature 2 : word count without stopwords and punctuations
 
