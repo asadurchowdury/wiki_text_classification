@@ -120,4 +120,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     df = pd.read_csv(args.input_file)
     extract_features = preprocessing(df,True)
-    extract_features.to_csv(args.output_file, index=False,compression = 'gzip'))
+    extract_features.to_csv(args.output_file, index=False,compression = 'gzip')
