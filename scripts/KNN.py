@@ -5,8 +5,8 @@ from extract_feature import preprocessing
 traindf = pd.read_csv(r'assets/WikiLarge_Train.csv')
 
 traindf = preprocessing(traindf, clean = True)
-X_train = traindf.dropna().drop('label', axis = 1)[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid_binary','char_len','stopwords','dif_aoa_ratio','phonemes']]
-y_train = traindf.dropna().label
+X_train = traindf.fillna().drop('label', axis = 1)[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid_binary','char_len','stopwords','dif_aoa_ratio','phonemes']]
+y_train = traindf.label
 
 from sklearn.preprocessing import StandardScaler
 
@@ -17,7 +17,7 @@ X_train = ss.fit_transform(X_train)
 testdf = pd.read_csv(r'assets/WikiLarge_Test.csv')
 
 testdf = preprocessing(testdf, clean = True)
-X_test = testdf.drop('label', axis = 1).dropna()[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid_binary','char_len','stopwords','dif_aoa_ratio','phonemes']]
+X_test = testdf.drop('label', axis = 1).fillna()[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid_binary','char_len','stopwords','dif_aoa_ratio','phonemes']]
 
 X_test = ss.fit_transform(X_test)
 
