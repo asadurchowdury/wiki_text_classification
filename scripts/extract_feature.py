@@ -9,21 +9,6 @@ import pandas as pd
 import re
 import numpy as np
 import syllapy
-
-
-
-
-aoa = pd.read_csv('assets/AoA_51715_words.csv', encoding= 'unicode_escape')
-
-#Freq_pm: Freq of the Word in general English (larger -> more common)
-dict_lookup = dict(zip(aoa["Word"], aoa["Freq_pm"]))
-
-#AoA_Kup_lem: Estimated AoA based on Kuperman et al. study lemmatized words.
-other_dict_lookup  = dict(zip(aoa["Word"], aoa["AoA_Kup_lem"]))
-
-import nltk
-
-import spacy
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -127,9 +112,6 @@ def preprocessing(df,clean=True):
     df['phonemes'] = df.words.apply(lambda x: np.mean([phoneme_dict.get(i) for i in x if i in phoneme_dict]))
     df['conc_score'] = df.words.apply(lambda x: np.mean([concrete_dict.get(i) for i in x if i in concrete_dict]))
     df.drop(['original_text','lem_words','words', 'ya_score'],axis=1,inplace = True)
-
-    df.drop(['original_text','lem_words','words'],axis=1,inplace = True)
-
 
     return df
 
