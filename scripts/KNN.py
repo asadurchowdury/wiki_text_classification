@@ -19,6 +19,7 @@ testdf = pd.read_csv(r'assets/WikiLarge_Test.csv')
 testdf = preprocessing(testdf, clean = True)
 X_test = testdf.drop('label', axis = 1).dropna()[['sentence_len','freq_score','aoa_score','syllable_count','Flesch_Kincaid_binary','char_len','stopwords','dif_aoa_ratio','phonemes']]
 
+X_test = ss.fit_transform(X_test)
 
 knn_f = KNeighborsClassifier(n_neighbors = 19, metric = 'manhattan', weights = 'distance')
 knn_f.fit(X_train, y_train)
