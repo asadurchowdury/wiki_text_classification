@@ -1,39 +1,43 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn import svm
+from numpy import testing
+from sklearn.metrics import f1_score
+from urllib.request import urlopen
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
-data = pd.read_csv('assets/test.csv')
-
-# other features can be added to this vectorizer, checkout sklearn for np.hstack
-vectorizer = TfidfVectorizer(min_df=100,ngram_range=(1,2),stop_words='english')
-
-print('Vectorizing the training data ...')
-X_train = vectorizer.fit_transform(data.original_text)
-y_train = data.label
-
-from sklearn.preprocessing import MaxAbsScaler, RobustScaler
-scaling = RobustScaler(with_centering=False).fit(X_train)
-X_train = scaling.transform(X_train)
 
 
-print('Training gradient boosted model ...')
-clf = RandomForestClassifier(n_estimators=10,n_jobs=-1)
+data = pd.read_csv('assets/train.csv.gz',compression='gzip')
+print(data.columns)
+
+# feature_list = ['sentence_len', 'freq_score', 'aoa_score', 'syllable_count',
+#        'Flesch_Kincaid', 'Flesch_Kincaid_binary', 'dale_ratio', 'char_len', 
+#        'avg_word_len', 'stopwords', 'non_stopwords', 'sim_aoa_ratio',       
+#        'dif_aoa_ratio', 'phonemes', 'conc_score']
+feature_list = ['aoa_score','char_len','syllable_count']
+
+data_f = data.fillna(0)
+X_train = data_f[feature_list]
+X_train = X_train.astype('float')
+y_train = data_f.label
+
+clf = GradientBoostingClassifier()
 clf.fit(X_train,y_train)
 
-testdata = pd.read_csv('assets/WikiLarge_Train.csv')
-
-print('Fitting test data to vectorizer ...')
-X_test = vectorizer.transform(testdata.original_text)
-X_test = scaling.transform(X_test)
-y_test = testdata.label
-
-y_pred = clf.predict(X_test)
 
 
-from sklearn.metrics import f1_score, accuracy_score, auc
+testdata = pd.read_csv('assets/test.csv.gz',compression='gzip')
 
-score = f1_score(y_test,y_pred)
+testdata_f = testdata[feature_list]
 
-print("F1 score for gradient boosted model is ", score)
+testdata_f = testdata_f.fillna(0)
+testdata_f = testdata_f.astype('float')
+print(testdata_f.head())
+feature_importance = list(zip(feature_list,  clf.feature_importances_))
+feature_importance = sorted(feature_importance,key= lambda x: x[1],reverse=True)
+print(feature_importance)
+# print(testdata.columns)
+predict = clf.predict(testdata_f)
+
+prediction = pd.DataFrame(predict, columns=['label'])
+prediction.rename({"index":'id'},axis=0,inplace=True)
+prediction.to_csv('prediction/gradient_prediction_with_3_features.csv')
