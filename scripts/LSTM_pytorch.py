@@ -2,13 +2,16 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from extract_feature import preprocessing
+import torch
+import torch.nn as nn
+
 
 traindf = pd.read_csv('assets/train.csv')
 
 cv = CountVectorizer(analyzer=lambda x: x)
 
 #df with feature representations from preprocessing function of extract_feature.py
-df = preprocessing(df.dropna())
+df = preprocessing(traindf.dropna())
 df['vec'] = df.words.apply(lambda x: " ".join(x))
 
 arr = cv.fit_transform(df['vec']).toarray()
