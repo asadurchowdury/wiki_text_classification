@@ -21,7 +21,7 @@ X_test = testdf.drop('label', axis = 1).fillna()[['sentence_len','freq_score','a
 
 X_test = ss.fit_transform(X_test)
 
-knn_f = KNeighborsClassifier(n_neighbors = 19, metric = 'manhattan', weights = 'distance')
+knn_f = KNeighborsClassifier(n_neighbors = 31, metric = 'manhattan', weights = 'distance')
 knn_f.fit(X_train, y_train)
 
 y_pred = knn_f.predict(X_test)
