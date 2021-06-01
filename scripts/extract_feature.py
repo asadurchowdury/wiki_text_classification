@@ -95,22 +95,22 @@ def preprocessing(df,clean=True):
 
     df['sentence_len'] = df.words.apply(lambda x: len(x))
     df['lem_words'] = df.words.apply(lambda x: lemma_list(x))
-    df['freq_score'] = df.lem_words.apply(lambda x: np.mean([dict_lookup.get(i) if i in dict_lookup else 0 for i in x]))
+    df['freq_score'] = df.lem_words.apply(lambda x: np.mean([dict_lookup.get(i) if i in dict_lookup else 0 for i in x])) #higher freq_score means simpler
     df['ya_score'] = df.words.apply(lambda x: [other_dict_lookup.get(i) for i in x if i in other_dict_lookup])
-    df['aoa_score'] = df.lem_words.apply(lambda x: np.mean([other_dict_lookup.get(i) for i in x if i in other_dict_lookup]))
-    df['syllable_count'] = df['words'].apply(lambda x: syllable_counter(x))
-    df['Flesch_Kincaid'] = (206.835 - (1.015 * df.sentence_len) - (84.6 * (df.syllable_count / df.sentence_len)))
+    df['aoa_score'] = df.lem_words.apply(lambda x: np.mean([other_dict_lookup.get(i) for i in x if i in other_dict_lookup])) #lower aoa_score means simpler
+    df['syllable_count'] = df['words'].apply(lambda x: syllable_counter(x)) #assuming that lower syllable count means simpler
+    df['Flesch_Kincaid'] = (206.835 - (1.015 * df.sentence_len) - (84.6 * (df.syllable_count / df.sentence_len))) #higher Flesch-Kincaid score means simpler
     df['Flesch_Kincaid_binary'] = np.where(df['Flesch_Kincaid'] > df['Flesch_Kincaid'].mean(), 0, 1)
-    df['dale_ratio']=df['original_text'].apply(lambda x: ratio_calculator(x,dale))
-    df['char_len'] = df['original_text'].str.len()
-    df['avg_word_len'] = df['original_text'].apply(lambda x: avg_word(x))
-    df['stopwords'] = df['words'].apply(lambda x: len([x for x in x if x in eng_stopwords]))
-    df['non_stopwords'] = df['sentence_len']-df['stopwords']
+    df['dale_ratio']=df['original_text'].apply(lambda x: ratio_calculator(x,dale)) #higher ratio score means simpler
+    df['char_len'] = df['original_text'].str.len() #lower char_len means simpler
+    df['avg_word_len'] = df['original_text'].apply(lambda x: avg_word(x)) #lower average word length means simpler
+    df['stopwords'] = df['words'].apply(lambda x: len([x for x in x if x in eng_stopwords])) #more stopwords should be simpler
+    df['non_stopwords'] = df['sentence_len']-df['stopwords'] #less non-stopwords should be simpler
 
     df['sim_aoa_ratio'] = df.ya_score.apply(lambda x: sim_ratio(x))  # higher is better
     df['dif_aoa_ratio'] = df.ya_score.apply(lambda x: dif_ratio(x))  # lower is better
-    df['phonemes'] = df.words.apply(lambda x: np.mean([phoneme_dict.get(i) for i in x if i in phoneme_dict]))
-    df['conc_score'] = df.words.apply(lambda x: np.mean([concrete_dict.get(i) for i in x if i in concrete_dict]))
+    df['phonemes'] = df.words.apply(lambda x: np.mean([phoneme_dict.get(i) for i in x if i in phoneme_dict])) #lower is better
+    df['conc_score'] = df.words.apply(lambda x: np.mean([concrete_dict.get(i) for i in x if i in concrete_dict])) #higher is better
     df.drop(['original_text','lem_words','words', 'ya_score'],axis=1,inplace = True)
 
     return df
