@@ -10,11 +10,11 @@ from sklearn.ensemble import GradientBoostingClassifier
 data = pd.read_csv('assets/train.csv.gz',compression='gzip')
 print(data.columns)
 
-feature_list = ['sentence_len', 'freq_score', 'aoa_score', 'syllable_count',
-       'Flesch_Kincaid', 'Flesch_Kincaid_binary', 'dale_ratio', 'char_len', 
-       'avg_word_len', 'stopwords', 'non_stopwords', 'sim_aoa_ratio',       
-       'dif_aoa_ratio', 'phonemes', 'conc_score']
-# feature_list = ['aoa_score','char_len','freq_score','conc_score','avg_word_len','phonemes','dale_ratio','Flesch_Kincaid']
+# feature_list = ['sentence_len', 'freq_score', 'aoa_score', 'syllable_count',
+#       'Flesch_Kincaid', 'Flesch_Kincaid_binary', 'dale_ratio', 'char_len', 
+#       'avg_word_len', 'stopwords', 'non_stopwords', 'sim_aoa_ratio',       
+#       'dif_aoa_ratio', 'phonemes', 'conc_score']
+feature_list = ['aoa_score','char_len','freq_score','conc_score','avg_word_len','phonemes','dale_ratio','Flesch_Kincaid']
 
 data_f = data.fillna(0)
 X_train = data_f[feature_list]
